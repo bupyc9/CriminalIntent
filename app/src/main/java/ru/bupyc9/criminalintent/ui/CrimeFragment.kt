@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import ru.bupyc9.criminalintent.models.Crime
 import kotlinx.android.synthetic.main.fragment_crime.*
 import ru.bupyc9.criminalintent.R
+import java.util.*
 
 class CrimeFragment: Fragment() {
     companion object {
@@ -24,7 +25,7 @@ class CrimeFragment: Fragment() {
         }
     }
 
-    private val mCrime = Crime(1, "")
+    private val mCrime = Crime(1, "", Date(), true)
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_crime, container, false)
@@ -32,6 +33,7 @@ class CrimeFragment: Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         crime_title.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(c: Editable?) {
 
@@ -45,5 +47,10 @@ class CrimeFragment: Fragment() {
                 mCrime.title = c.toString()
             }
         })
+
+        crime_date.text = mCrime.date.toString()
+        crime_date.isEnabled = false
+
+        crime_solved.setOnCheckedChangeListener { _, isChecked -> mCrime.solved = isChecked }
     }
 }
