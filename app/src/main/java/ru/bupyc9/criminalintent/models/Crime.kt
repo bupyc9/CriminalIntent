@@ -1,6 +1,4 @@
 package ru.bupyc9.criminalintent.models
 
-import java.util.*
-
-data class Crime(val id: Int, val title: String) {
+data class Crime(var id: Int, var title: String) {
 }
