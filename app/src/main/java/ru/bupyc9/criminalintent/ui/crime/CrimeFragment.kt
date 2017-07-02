@@ -1,5 +1,7 @@
 package ru.bupyc9.criminalintent.ui.crime
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -10,11 +12,14 @@ import android.view.ViewGroup
 import ru.bupyc9.criminalintent.models.Crime
 import kotlinx.android.synthetic.main.fragment_crime.*
 import ru.bupyc9.criminalintent.R
+import ru.bupyc9.criminalintent.ui.datecrime.DatePickerFragment
 
 class CrimeFragment: Fragment() {
     companion object {
         @JvmStatic private val TAG = CrimeFragment::class.java.simpleName
         @JvmStatic private val ARG_CRIME = "arg_crime"
+        @JvmStatic private val DIALOG_DATE = "dialog_date"
+        @JvmStatic private val REQUEST_DATE = 0
 
         @JvmStatic fun newInstance(crime: Crime): CrimeFragment {
             val fragment = CrimeFragment()
@@ -58,9 +63,32 @@ class CrimeFragment: Fragment() {
             }
         })
 
-        crime_date.text = mCrime.date.toString()
-        crime_date.isEnabled = mCrime.solved
+        updateDate()
+        crime_date.setOnClickListener {
+            val dialog = DatePickerFragment.newInstance(mCrime.date)
+            dialog.setTargetFragment(this, REQUEST_DATE)
+            dialog.show(fragmentManager, DIALOG_DATE)
+
+        }
 
         crime_solved.setOnCheckedChangeListener { _, isChecked -> mCrime.solved = isChecked }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (requestCode == REQUEST_DATE) {
+            val date = DatePickerFragment.getDate(data)
+            mCrime.date = date
+            updateDate()
+        }
+    }
+
+    private fun updateDate() {
+        crime_date.text = mCrime.date.toString()
     }
 }
