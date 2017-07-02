@@ -29,9 +29,7 @@ class CrimeListAdapter(private val mItems: MutableList<Crime>) : RecyclerView.Ad
         return ViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        return mItems.size
-    }
+    override fun getItemCount(): Int = mItems.size
 
     fun setOnClickListener(listener: (View?, Crime) -> Unit) {
         mOnClickListener = listener
