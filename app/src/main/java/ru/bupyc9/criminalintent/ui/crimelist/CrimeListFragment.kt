@@ -10,7 +10,7 @@ import ru.bupyc9.criminalintent.R
 import kotlinx.android.synthetic.main.fragment_crime_list.*
 import ru.bupyc9.criminalintent.CrimeActivity
 import ru.bupyc9.criminalintent.models.Crime
-import ru.bupyc9.criminalintent.ui.CrimeFragment
+import ru.bupyc9.criminalintent.ui.crime.CrimeFragment
 import java.util.*
 
 class CrimeListFragment : Fragment() {

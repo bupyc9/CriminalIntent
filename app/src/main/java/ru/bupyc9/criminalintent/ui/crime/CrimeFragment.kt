@@ -1,4 +1,4 @@
-package ru.bupyc9.criminalintent.ui
+package ru.bupyc9.criminalintent.ui.crime
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
