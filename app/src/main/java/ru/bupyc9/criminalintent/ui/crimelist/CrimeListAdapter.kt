@@ -19,7 +19,7 @@ class CrimeListAdapter(private val mItems: MutableList<Crime>) : RecyclerView.Ad
     }
 
     private fun getItem(position: Int): Crime {
-        return mItems.get(position)
+        return mItems[position]
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
