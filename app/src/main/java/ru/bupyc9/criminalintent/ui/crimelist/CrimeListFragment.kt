@@ -10,8 +10,9 @@ import ru.bupyc9.criminalintent.R
 import kotlinx.android.synthetic.main.fragment_crime_list.*
 import ru.bupyc9.criminalintent.CrimeActivity
 import ru.bupyc9.criminalintent.models.Crime
-import ru.bupyc9.criminalintent.ui.crime.CrimeFragment
+import ru.bupyc9.criminalintent.ui.crime.CrimePagerFragment
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CrimeListFragment : Fragment() {
     companion object {
@@ -50,7 +51,7 @@ class CrimeListFragment : Fragment() {
         val activity = activity as CrimeActivity
 
         mAdapter = CrimeListAdapter(crimes)
-        mAdapter.setOnClickListener { _, crime -> activity.addFragment(CrimeFragment.newInstance(crime), true) }
+        mAdapter.setOnClickListener { _, crime -> activity.addFragment(CrimePagerFragment.newInstance(crimes as ArrayList<Crime>, crimes.indexOf(crime)), true) }
         crime_list.adapter = mAdapter
     }
 }
