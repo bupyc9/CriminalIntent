@@ -5,4 +5,8 @@
     <string name="crime_details_label">Подробно</string>
     <string name="crime_solved">Раскрыто</string>
     <string name="date_picker_title">Дата преступления:</string>
+    <string name="new_crime">Новое перступление</string>
+    <string name="show_subtitle">Показать подзаголовок</string>
+    <string name="hide_subtitle">Скрыть подзаголовок</string>
+    <string name="subtitle_format">%1$s преступлений</string>
 </resources>
