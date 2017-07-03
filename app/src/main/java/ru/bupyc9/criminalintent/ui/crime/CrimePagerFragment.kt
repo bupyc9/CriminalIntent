@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import ru.bupyc9.criminalintent.R
 import kotlinx.android.synthetic.main.fragment_pager_crime.*
-import ru.bupyc9.criminalintent.CrimeActivity
 import ru.bupyc9.criminalintent.models.Crime
 
 class CrimePagerFragment: Fragment() {
