@@ -71,6 +71,7 @@ class CrimeFragment: Fragment() {
 
         }
 
+        crime_solved.isChecked = mCrime.solved
         crime_solved.setOnCheckedChangeListener { _, isChecked -> mCrime.solved = isChecked }
     }
 
