@@ -12,7 +12,9 @@ class CrimeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fragment)
 
-        addFragment(CrimeListFragment.newInstance())
+        if (savedInstanceState == null) {
+            addFragment(CrimeListFragment.newInstance())
+        }
 
         supportFragmentManager.addOnBackStackChangedListener {
             val show = supportFragmentManager.backStackEntryCount > 0
