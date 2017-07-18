@@ -61,12 +61,12 @@ class CrimeListFragment : Fragment() {
 
         val activity = activity as CrimeActivity
 
-        mAdapter = CrimeListAdapter(CrimeLab.instance.crimes)
+        mAdapter = CrimeListAdapter(CrimeLab.get(activity).getCrimes())
         mAdapter.setOnClickListener { _, crime ->
             activity.addFragment(
                     CrimePagerFragment.newInstance(
-                            CrimeLab.instance.crimes as ArrayList<Crime>,
-                            CrimeLab.instance.crimes.indexOf(crime)
+                            CrimeLab.get(activity).getCrimes() as ArrayList<Crime>,
+                            CrimeLab.get(activity).getCrimes().indexOf(crime)
                     ),
                     true
             )
@@ -95,10 +95,10 @@ class CrimeListFragment : Fragment() {
 
     private fun optionItemNewCrime(): Boolean {
         val crime = Crime(0, "", Date(), false)
-        CrimeLab.instance.crimes.add(crime)
+        CrimeLab.get(activity).addCrime(crime)
         val fragment = CrimePagerFragment.newInstance(
-                CrimeLab.instance.crimes as ArrayList<Crime>,
-                CrimeLab.instance.crimes.indexOf(crime)
+                CrimeLab.get(activity).getCrimes() as ArrayList<Crime>,
+                CrimeLab.get(activity).getCrimes().indexOf(crime)
         )
         val activity = activity as CrimeActivity
         activity.addFragment(fragment, true)
