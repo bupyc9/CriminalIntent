@@ -61,13 +61,12 @@ class CrimeListFragment : Fragment() {
 
         val activity = activity as CrimeActivity
 
-        mAdapter = CrimeListAdapter(CrimeLab.get(activity).getCrimes())
+        val crimes = CrimeLab.get(activity).getCrimes()
+
+        mAdapter = CrimeListAdapter(crimes)
         mAdapter.setOnClickListener { _, crime ->
             activity.addFragment(
-                    CrimePagerFragment.newInstance(
-                            CrimeLab.get(activity).getCrimes() as ArrayList<Crime>,
-                            CrimeLab.get(activity).getCrimes().indexOf(crime)
-                    ),
+                    CrimePagerFragment.newInstance(crimes, crimes.indexOf(crime)),
                     true
             )
         }
@@ -87,7 +86,7 @@ class CrimeListFragment : Fragment() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?) = when(item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
         R.id.menu_item_new_crime -> optionItemNewCrime()
         R.id.menu_item_show_subtitle -> updateSubtitle()
         else -> super.onOptionsItemSelected(item)
@@ -95,9 +94,8 @@ class CrimeListFragment : Fragment() {
 
     private fun optionItemNewCrime(): Boolean {
         val crime = Crime(0, "", Date(), false)
-        CrimeLab.get(activity).addCrime(crime)
         val fragment = CrimePagerFragment.newInstance(
-                CrimeLab.get(activity).getCrimes() as ArrayList<Crime>,
+                CrimeLab.get(activity).getCrimes(),
                 CrimeLab.get(activity).getCrimes().indexOf(crime)
         )
         val activity = activity as CrimeActivity
