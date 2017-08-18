@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.item_crime.view.*
 
 class CrimeListAdapter(private val mItems: MutableList<Crime>) : RecyclerView.Adapter<CrimeListAdapter.ViewHolder>() {
     private var mOnClickListener: ((View?, Crime) -> Unit)? = null
+    private var mOnLongClickListener: ((View?, Crime) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
         val viewHolder = holder as ViewHolder
@@ -35,11 +36,17 @@ class CrimeListAdapter(private val mItems: MutableList<Crime>) : RecyclerView.Ad
         mOnClickListener = listener
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    fun setOnLongClick(listener: (View?, Crime) -> Unit) {
+        mOnLongClickListener = listener
+    }
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
+            View.OnLongClickListener {
         private lateinit var mCrime: Crime
 
         init {
             itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
         }
 
         fun bind(crime: Crime) {
@@ -51,6 +58,11 @@ class CrimeListAdapter(private val mItems: MutableList<Crime>) : RecyclerView.Ad
 
         override fun onClick(view: View?) {
             mOnClickListener?.invoke(view, mCrime)
+        }
+
+        override fun onLongClick(view: View?): Boolean {
+            mOnLongClickListener?.invoke(view, mCrime)
+            return mOnLongClickListener != null
         }
     }
 }
