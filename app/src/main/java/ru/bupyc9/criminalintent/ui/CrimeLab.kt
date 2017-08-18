@@ -14,7 +14,8 @@ class CrimeLab private constructor(var mContext: Context) {
     companion object {
         @JvmStatic private var sCrimeLab: CrimeLab? = null
 
-        @JvmStatic fun get(context: Context): CrimeLab {
+        @JvmStatic
+        fun get(context: Context): CrimeLab {
             if (sCrimeLab == null) {
                 sCrimeLab = CrimeLab(context)
             }
@@ -34,6 +35,14 @@ class CrimeLab private constructor(var mContext: Context) {
         mDatabase.update(
                 CrimeDbSchema.CrimeTable.NAME,
                 values,
+                "${CrimeDbSchema.CrimeTable.Cols.ID} = ?",
+                arrayOf(crime.id.toString())
+        )
+    }
+
+    fun deleteCrime(crime: Crime) {
+        mDatabase.delete(
+                CrimeDbSchema.CrimeTable.NAME,
                 "${CrimeDbSchema.CrimeTable.Cols.ID} = ?",
                 arrayOf(crime.id.toString())
         )
