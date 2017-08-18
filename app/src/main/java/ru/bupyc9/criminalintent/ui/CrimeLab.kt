@@ -26,7 +26,7 @@ class CrimeLab private constructor(var mContext: Context) {
     fun addCrime(crime: Crime) {
         val values = getContentValues(crime)
 
-        mDatabase.insert(CrimeDbSchema.CrimeTable.NAME, null, values)
+        crime.id = mDatabase.insert(CrimeDbSchema.CrimeTable.NAME, null, values).toInt()
     }
 
     fun updateCrime(crime: Crime) {
@@ -34,7 +34,7 @@ class CrimeLab private constructor(var mContext: Context) {
         mDatabase.update(
                 CrimeDbSchema.CrimeTable.NAME,
                 values,
-                "${CrimeDbSchema.CrimeTable.Cols.UUID} = ?",
+                "${CrimeDbSchema.CrimeTable.Cols.ID} = ?",
                 arrayOf(crime.id.toString())
         )
     }
@@ -57,7 +57,7 @@ class CrimeLab private constructor(var mContext: Context) {
 
     fun getCrime(id: Int): Crime? {
         val cursor = queryCrimes(
-                "${CrimeDbSchema.CrimeTable.Cols.UUID} = ?",
+                "${CrimeDbSchema.CrimeTable.Cols.ID} = ?",
                 arrayOf(id.toString())
         )
 
@@ -76,7 +76,6 @@ class CrimeLab private constructor(var mContext: Context) {
     private fun getContentValues(crime: Crime): ContentValues {
         val values = ContentValues()
 
-        values.put(CrimeDbSchema.CrimeTable.Cols.UUID, crime.id.toString())
         values.put(CrimeDbSchema.CrimeTable.Cols.TITLE, crime.title)
         values.put(CrimeDbSchema.CrimeTable.Cols.DATE, crime.date.time)
         values.put(CrimeDbSchema.CrimeTable.Cols.SOLVED, crime.solved.toString())
