@@ -7,7 +7,7 @@ class CrimeDbSchema {
         }
         class Cols {
             companion object {
-                @JvmStatic val UUID = "uuid"
+                @JvmStatic val ID = "id"
                 @JvmStatic val TITLE = "title"
                 @JvmStatic val DATE = "date"
                 @JvmStatic val SOLVED = "solved"
