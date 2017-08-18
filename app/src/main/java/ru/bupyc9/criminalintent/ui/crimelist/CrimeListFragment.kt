@@ -68,7 +68,7 @@ class CrimeListFragment : Fragment() {
         mAdapter = CrimeListAdapter(crimes)
         mAdapter.setOnClickListener { _, crime ->
             activity.addFragment(
-                    CrimePagerFragment.newInstance(crimes, crimes.indexOf(crime)),
+                    CrimePagerFragment.newInstance(crimes.indexOf(crime)),
                     true
             )
         }
