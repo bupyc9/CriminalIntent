@@ -47,7 +47,7 @@ class CrimePagerFragment: Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter: FragmentStatePagerAdapter = object : FragmentStatePagerAdapter(fragmentManager) {
+        val adapter: FragmentStatePagerAdapter = object : FragmentStatePagerAdapter(childFragmentManager) {
             override fun getItem(position: Int): Fragment = CrimeFragment.newInstance(mCrimes[position].id)
 
             override fun getCount(): Int = mCrimes.size
