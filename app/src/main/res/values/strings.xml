@@ -10,6 +10,10 @@
     <string name="hide_subtitle">Скрыть подзаголовок</string>
     <string name="menu_save_crime">Сохранить</string>
     <string name="error_crime_empty_title">Введите название преступления</string>
+    <string name="confirm_delete_crime_title">Удалить</string>
+    <string name="confirm_delete_crime_message">Вы уверены что хотите удалить преступление?</string>
+    <string name="button_yes">Да</string>
+    <string name="button_no">Нет</string>
 
     <plurals name="subtitle_plural">
         <item quantity="one">%1$s преступление</item>

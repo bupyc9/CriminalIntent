@@ -40,6 +40,10 @@ class CrimeListAdapter(private val mItems: MutableList<Crime>) : RecyclerView.Ad
         mOnLongClickListener = listener
     }
 
+    fun remove(crime: Crime): Boolean = mItems.remove(crime)
+
+    fun getPosition(crime: Crime) = mItems.indexOf(crime)
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener,
             View.OnLongClickListener {
         private lateinit var mCrime: Crime

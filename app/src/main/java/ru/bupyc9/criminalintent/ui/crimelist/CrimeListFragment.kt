@@ -2,6 +2,7 @@ package ru.bupyc9.criminalintent.ui.crimelist
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
@@ -16,7 +17,8 @@ class CrimeListFragment : Fragment() {
     companion object {
         @JvmStatic private val SAVED_SUBTITLE_VISIBLE = "subtitle"
 
-        @JvmStatic fun newInstance(): CrimeListFragment {
+        @JvmStatic
+        fun newInstance(): CrimeListFragment {
             val fragment = CrimeListFragment()
             val bundle = Bundle()
 
@@ -28,6 +30,7 @@ class CrimeListFragment : Fragment() {
 
     private lateinit var mAdapter: CrimeListAdapter
     private var mSubtitleVisible = false
+    private lateinit var crimeLab: CrimeLab
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +39,8 @@ class CrimeListFragment : Fragment() {
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE)
         }
+
+        crimeLab = CrimeLab.get(activity)
     }
 
     override fun onPause() {
@@ -58,7 +63,7 @@ class CrimeListFragment : Fragment() {
 
         val activity = activity as CrimeActivity
 
-        val crimes = CrimeLab.get(activity).getCrimes()
+        val crimes = crimeLab.getCrimes()
 
         mAdapter = CrimeListAdapter(crimes)
         mAdapter.setOnClickListener { _, crime ->
@@ -66,6 +71,22 @@ class CrimeListFragment : Fragment() {
                     CrimePagerFragment.newInstance(crimes, crimes.indexOf(crime)),
                     true
             )
+        }
+        mAdapter.setOnLongClick { _, crime ->
+            val builder = AlertDialog.Builder(activity)
+
+            builder
+                    .setTitle(R.string.confirm_delete_crime_title)
+                    .setMessage(R.string.confirm_delete_crime_message)
+                    .setPositiveButton(R.string.button_yes, { _, _ ->
+                        val position = mAdapter.getPosition(crime)
+                        crimeLab.deleteCrime(crime)
+                        mAdapter.remove(crime)
+                        mAdapter.notifyItemRemoved(position)
+                    })
+                    .setNegativeButton(R.string.button_no, { _, _ -> })
+
+            builder.show()
         }
         crime_list.adapter = mAdapter
     }
