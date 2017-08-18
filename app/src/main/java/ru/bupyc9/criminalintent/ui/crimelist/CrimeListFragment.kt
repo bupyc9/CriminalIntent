@@ -5,14 +5,12 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
-import ru.bupyc9.criminalintent.R
 import kotlinx.android.synthetic.main.fragment_crime_list.*
 import ru.bupyc9.criminalintent.CrimeActivity
-import ru.bupyc9.criminalintent.models.Crime
+import ru.bupyc9.criminalintent.R
 import ru.bupyc9.criminalintent.ui.CrimeLab
+import ru.bupyc9.criminalintent.ui.crime.CrimeFragment
 import ru.bupyc9.criminalintent.ui.crime.CrimePagerFragment
-import java.util.*
-import kotlin.collections.ArrayList
 
 class CrimeListFragment : Fragment() {
     companion object {
@@ -50,9 +48,8 @@ class CrimeListFragment : Fragment() {
         outState?.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_crime_list, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater?.inflate(R.layout.fragment_crime_list, container, false)
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,6 +72,7 @@ class CrimeListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
 
         inflater?.inflate(R.menu.fragment_crime_list, menu)
 
@@ -93,13 +91,8 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun optionItemNewCrime(): Boolean {
-        val crime = Crime(0, "", Date(), false)
-        val fragment = CrimePagerFragment.newInstance(
-                CrimeLab.get(activity).getCrimes(),
-                CrimeLab.get(activity).getCrimes().indexOf(crime)
-        )
         val activity = activity as CrimeActivity
-        activity.addFragment(fragment, true)
+        activity.addFragment(CrimeFragment.newInstance(), true)
 
         return true
     }

@@ -6,26 +6,31 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import ru.bupyc9.criminalintent.models.Crime
 import kotlinx.android.synthetic.main.fragment_crime.*
+import ru.bupyc9.criminalintent.CrimeActivity
 import ru.bupyc9.criminalintent.R
+import ru.bupyc9.criminalintent.ui.CrimeLab
+import ru.bupyc9.criminalintent.ui.crimelist.CrimeListFragment
 import ru.bupyc9.criminalintent.ui.datecrime.DatePickerFragment
+import java.util.*
 
 class CrimeFragment: Fragment() {
     companion object {
         @JvmStatic private val TAG = CrimeFragment::class.java.simpleName
-        @JvmStatic private val ARG_CRIME = "arg_crime"
+        @JvmStatic private val ARG_CRIME_ID = "arg_crime"
         @JvmStatic private val DIALOG_DATE = "dialog_date"
         @JvmStatic private val REQUEST_DATE = 0
 
-        @JvmStatic fun newInstance(crime: Crime): CrimeFragment {
+        @JvmStatic fun newInstance(): CrimeFragment = CrimeFragment()
+
+        @JvmStatic fun newInstance(id: Int): CrimeFragment {
             val fragment = CrimeFragment()
             val bundle = Bundle()
 
-            bundle.putParcelable(ARG_CRIME, crime)
+            bundle.putInt(ARG_CRIME_ID, id)
             fragment.arguments = bundle
 
             return fragment
@@ -33,12 +38,62 @@ class CrimeFragment: Fragment() {
     }
 
     private lateinit var mCrime: Crime
+    private var mId: Int = 0
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
 
-        mCrime = args?.getParcelable(ARG_CRIME)!!
+        mId = args?.getInt(ARG_CRIME_ID)!!
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+
+        Log.d(TAG, "onCreate");
+
+        val activity = activity as CrimeActivity
+
+        Log.d(TAG, "count fragment ${activity.supportFragmentManager.fragments.size}");
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
+
+        inflater?.inflate(R.menu.fragment_crime, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+        R.id.menu_save_crime -> save()
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    private fun save(): Boolean {
+        Log.d(TAG, "click by save button");
+
+        var verify = true
+
+        if (mCrime.title.isEmpty()) {
+            verify = false
+            crime_title.error = getString(R.string.error_crime_empty_title)
+        }
+
+        if (verify) {
+            val crimeLab = CrimeLab.get(activity)
+            if (mCrime.id > 0) {
+                crimeLab.updateCrime(mCrime)
+            } else {
+                crimeLab.addCrime(mCrime)
+            }
+
+            val activity = activity as CrimeActivity
+            activity.addFragment(CrimeListFragment.newInstance())
+        }
+
+        return true
+    }
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater?.inflate(R.layout.fragment_crime, container, false)
@@ -46,6 +101,12 @@ class CrimeFragment: Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (mId > 0) {
+            mCrime = CrimeLab.get(activity).getCrime(mId)!!
+        } else {
+            mCrime = Crime(0, "", Date(), false)
+        }
 
         crime_title.setText(mCrime.title)
 
@@ -91,5 +152,11 @@ class CrimeFragment: Fragment() {
 
     private fun updateDate() {
         crime_date.text = mCrime.date.toString()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+
+        Log.d(TAG, "onDetach")
     }
 }

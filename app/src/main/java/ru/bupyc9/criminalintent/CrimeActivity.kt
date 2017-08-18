@@ -7,6 +7,7 @@ import android.view.MenuItem
 import ru.bupyc9.criminalintent.ui.crimelist.CrimeListFragment
 
 class CrimeActivity : AppCompatActivity() {
+    private val FRAGMENT_TAG = "fragment"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +27,7 @@ class CrimeActivity : AppCompatActivity() {
     fun addFragment(fragment: Fragment, addToBackStack: Boolean = false) {
         val transaction = supportFragmentManager.beginTransaction()
 
-        transaction.replace(R.id.fragment_container, fragment)
+        transaction.replace(R.id.fragment_container, fragment, FRAGMENT_TAG)
 
         if (addToBackStack) {
             transaction.addToBackStack(null)
@@ -35,7 +36,7 @@ class CrimeActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when(item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         android.R.id.home -> {
             supportFragmentManager.popBackStack()
             true
