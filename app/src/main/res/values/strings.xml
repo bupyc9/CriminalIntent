@@ -15,6 +15,9 @@
     <string name="button_yes">Да</string>
     <string name="button_no">Нет</string>
 
+    <string name="crime_suspect_text">Выбрать подозреваемого</string>
+    <string name="crime_report_text">Отправить отчет</string>
+
     <plurals name="subtitle_plural">
         <item quantity="one">%1$s преступление</item>
         <item quantity="few">%1$s преступления</item>
