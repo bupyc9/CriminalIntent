@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.*
 import ru.bupyc9.criminalintent.models.Crime
 import kotlinx.android.synthetic.main.fragment_crime.*
+import kotlinx.android.synthetic.main.part_camera_and_title.*
 import ru.bupyc9.criminalintent.CrimeActivity
 import ru.bupyc9.criminalintent.R
 import ru.bupyc9.criminalintent.ui.CrimeLab
