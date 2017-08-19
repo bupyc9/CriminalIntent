@@ -87,8 +87,7 @@ class CrimeFragment: Fragment() {
                 crimeLab.addCrime(mCrime)
             }
 
-            val activity = activity as CrimeActivity
-            activity.addFragment(CrimeListFragment.newInstance())
+            activity.onBackPressed()
         }
 
         return true
