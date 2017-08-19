@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.support.v4.app.Fragment
+import android.support.v4.app.ShareCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
@@ -139,11 +140,14 @@ class CrimeFragment: Fragment() {
         crime_solved.setOnCheckedChangeListener { _, isChecked -> mCrime.solved = isChecked }
 
         crime_report.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/plain"
-            intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport())
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject))
-            startActivity(Intent.createChooser(intent, getString(R.string.send_report)))
+            val builder = ShareCompat.IntentBuilder.from(activity)
+            builder
+                    .setType("text/plain")
+                    .setText(getCrimeReport())
+                    .setSubject(getString(R.string.crime_report_subject))
+                    .setChooserTitle(R.string.send_report)
+
+            startActivity(builder.createChooserIntent())
         }
 
         val pickContact = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
