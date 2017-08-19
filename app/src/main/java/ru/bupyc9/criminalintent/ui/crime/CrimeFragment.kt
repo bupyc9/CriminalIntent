@@ -2,7 +2,10 @@ package ru.bupyc9.criminalintent.ui.crime
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
@@ -23,6 +26,7 @@ class CrimeFragment: Fragment() {
         @JvmStatic private val ARG_CRIME_ID = "arg_crime"
         @JvmStatic private val DIALOG_DATE = "dialog_date"
         @JvmStatic private val REQUEST_DATE = 0
+        @JvmStatic private val REQUEST_CONTACT = 1
 
         @JvmStatic fun newInstance(): CrimeFragment = CrimeFragment()
 
@@ -141,6 +145,20 @@ class CrimeFragment: Fragment() {
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject))
             startActivity(Intent.createChooser(intent, getString(R.string.send_report)))
         }
+
+        val pickContact = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+        crime_suspect.setOnClickListener {
+            startActivityForResult(pickContact, REQUEST_CONTACT)
+        }
+
+        if (!mCrime.suspect.isEmpty()) {
+            crime_suspect.text = mCrime.suspect
+        }
+
+        val packageManager = activity.packageManager
+        if (packageManager.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
+            crime_suspect.isEnabled = false
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -154,6 +172,24 @@ class CrimeFragment: Fragment() {
             val date = DatePickerFragment.getDate(data)
             mCrime.date = date
             updateDate()
+        }
+
+        if (requestCode == REQUEST_CONTACT && data != null) {
+            val contactUri: Uri = data.data
+            val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+            val cursor = activity.contentResolver.query(contactUri, queryFields, null, null, null)
+            try {
+                if (cursor.count == 0) {
+                    return
+                }
+
+                cursor.moveToFirst()
+                val suspect = cursor.getString(0)
+                mCrime.suspect = suspect
+                crime_suspect.text = suspect
+            } finally {
+                cursor.close()
+            }
         }
     }
 
