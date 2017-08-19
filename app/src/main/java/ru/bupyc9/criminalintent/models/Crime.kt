@@ -8,7 +8,8 @@ data class Crime(
         var id: Int,
         var title: String,
         var date: Date,
-        var solved: Boolean
+        var solved: Boolean,
+        var suspect: String
 ) : Parcelable {
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<Crime> = object : Parcelable.Creator<Crime> {
@@ -21,7 +22,8 @@ data class Crime(
             source.readInt(),
             source.readString(),
             source.readSerializable() as Date,
-            1 == source.readInt()
+            1 == source.readInt(),
+            source.readString()
     )
 
     override fun describeContents() = 0
@@ -31,5 +33,6 @@ data class Crime(
         dest.writeString(title)
         dest.writeSerializable(date)
         dest.writeInt((if (solved) 1 else 0))
+        dest.writeString(suspect)
     }
 }

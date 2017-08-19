@@ -11,6 +11,7 @@ class CrimeDbSchema {
                 @JvmStatic val TITLE = "title"
                 @JvmStatic val DATE = "date"
                 @JvmStatic val SOLVED = "solved"
+                @JvmStatic val SUSPECT = "suspect"
             }
         }
     }

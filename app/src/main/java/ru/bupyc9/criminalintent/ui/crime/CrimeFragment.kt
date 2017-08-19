@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.fragment_crime.*
 import ru.bupyc9.criminalintent.CrimeActivity
 import ru.bupyc9.criminalintent.R
 import ru.bupyc9.criminalintent.ui.CrimeLab
-import ru.bupyc9.criminalintent.ui.crimelist.CrimeListFragment
 import ru.bupyc9.criminalintent.ui.datecrime.DatePickerFragment
 import java.util.*
 
@@ -104,7 +103,7 @@ class CrimeFragment: Fragment() {
         if (mId > 0) {
             mCrime = CrimeLab.get(activity).getCrime(mId)!!
         } else {
-            mCrime = Crime(0, "", Date(), false)
+            mCrime = Crime(0, "", Date(), false, "")
         }
 
         crime_title.setText(mCrime.title)

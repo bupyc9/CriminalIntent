@@ -88,6 +88,7 @@ class CrimeLab private constructor(var mContext: Context) {
         values.put(CrimeDbSchema.CrimeTable.Cols.TITLE, crime.title)
         values.put(CrimeDbSchema.CrimeTable.Cols.DATE, crime.date.time)
         values.put(CrimeDbSchema.CrimeTable.Cols.SOLVED, crime.solved.toString())
+        values.put(CrimeDbSchema.CrimeTable.Cols.SUSPECT, crime.suspect)
 
         return values
     }
