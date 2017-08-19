@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.*
 import ru.bupyc9.criminalintent.models.Crime
@@ -132,6 +133,14 @@ class CrimeFragment: Fragment() {
 
         crime_solved.isChecked = mCrime.solved
         crime_solved.setOnCheckedChangeListener { _, isChecked -> mCrime.solved = isChecked }
+
+        crime_report.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport())
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject))
+            startActivity(Intent.createChooser(intent, getString(R.string.send_report)))
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -156,5 +165,25 @@ class CrimeFragment: Fragment() {
         super.onDetach()
 
         Log.d(TAG, "onDetach")
+    }
+
+    private fun getCrimeReport(): String {
+        var solvedString = ""
+        if (mCrime.solved) {
+            solvedString = getString(R.string.crime_report_solved)
+        } else {
+            solvedString = getString(R.string.crime_report_unsolved)
+        }
+
+        val dateString = DateFormat.format("EEE, MMM dd", mCrime.date).toString()
+
+        var suspect = mCrime.suspect
+        if (suspect.isEmpty()) {
+            suspect = getString(R.string.crime_report_no_suspect)
+        } else {
+            suspect = getString(R.string.crime_report_suspect, suspect)
+        }
+
+        return getString(R.string.crime_report, mCrime.title, dateString, solvedString, suspect)
     }
 }

@@ -23,4 +23,12 @@
         <item quantity="few">%1$s преступления</item>
         <item quantity="many">%1$s преступлений</item>
     </plurals>
+
+    <string name="crime_report">%1$s! Преступление было %2$s. %3$s, и %4$s </string>
+    <string name="crime_report_solved">Дело решено</string>
+    <string name="crime_report_unsolved">Дело не решено</string>
+    <string name="crime_report_no_suspect">Нет подозреваемого.</string>
+    <string name="crime_report_suspect">Подозреваемый %s.</string>
+    <string name="crime_report_subject">Преступное намерение</string>
+    <string name="send_report">Отправить отчет о преступлениях через</string>
 </resources>
