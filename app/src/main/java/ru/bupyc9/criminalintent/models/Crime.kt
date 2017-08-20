@@ -35,4 +35,6 @@ data class Crime(
         dest.writeInt((if (solved) 1 else 0))
         dest.writeString(suspect)
     }
+
+    fun getPhotoFilename(): String = "IMG_${id}.jpg"
 }

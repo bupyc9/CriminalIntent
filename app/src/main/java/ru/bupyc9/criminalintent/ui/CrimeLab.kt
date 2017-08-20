@@ -3,10 +3,12 @@ package ru.bupyc9.criminalintent.ui
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.os.Environment
 import ru.bupyc9.criminalintent.db.CrimeBaseHelper
 import ru.bupyc9.criminalintent.db.CrimeCursorWrapper
 import ru.bupyc9.criminalintent.db.CrimeDbSchema
 import ru.bupyc9.criminalintent.models.Crime
+import java.io.File
 
 class CrimeLab private constructor(var mContext: Context) {
     private var mDatabase: SQLiteDatabase = CrimeBaseHelper(mContext).writableDatabase
@@ -105,5 +107,11 @@ class CrimeLab private constructor(var mContext: Context) {
         )
 
         return CrimeCursorWrapper(cursor)
+    }
+
+    fun getPhotoFile(crime: Crime): File? {
+        val externalFilesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: return null
+
+        return File(externalFilesDir, crime.getPhotoFilename())
     }
 }

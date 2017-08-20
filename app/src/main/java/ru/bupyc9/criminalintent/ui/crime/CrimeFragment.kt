@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.app.ShareCompat
 import android.text.Editable
@@ -16,23 +17,27 @@ import android.view.*
 import ru.bupyc9.criminalintent.models.Crime
 import kotlinx.android.synthetic.main.fragment_crime.*
 import kotlinx.android.synthetic.main.part_camera_and_title.*
-import ru.bupyc9.criminalintent.CrimeActivity
 import ru.bupyc9.criminalintent.R
+import ru.bupyc9.criminalintent.getScaledBitmap
 import ru.bupyc9.criminalintent.ui.CrimeLab
 import ru.bupyc9.criminalintent.ui.datecrime.DatePickerFragment
+import java.io.File
 import java.util.*
 
-class CrimeFragment: Fragment() {
+class CrimeFragment : Fragment() {
     companion object {
         @JvmStatic private val TAG = CrimeFragment::class.java.simpleName
         @JvmStatic private val ARG_CRIME_ID = "arg_crime"
         @JvmStatic private val DIALOG_DATE = "dialog_date"
         @JvmStatic private val REQUEST_DATE = 0
         @JvmStatic private val REQUEST_CONTACT = 1
+        @JvmStatic private val REQUEST_PHOTO = 2
 
-        @JvmStatic fun newInstance(): CrimeFragment = CrimeFragment()
+        @JvmStatic
+        fun newInstance(): CrimeFragment = CrimeFragment()
 
-        @JvmStatic fun newInstance(id: Int): CrimeFragment {
+        @JvmStatic
+        fun newInstance(id: Int): CrimeFragment {
             val fragment = CrimeFragment()
             val bundle = Bundle()
 
@@ -45,6 +50,7 @@ class CrimeFragment: Fragment() {
 
     private lateinit var mCrime: Crime
     private var mId: Int = 0
+    private var mPhotoFile: File? = null
 
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
@@ -58,9 +64,13 @@ class CrimeFragment: Fragment() {
 
         Log.d(TAG, "onCreate");
 
-        val activity = activity as CrimeActivity
+        if (mId > 0) {
+            mCrime = CrimeLab.get(activity).getCrime(mId)!!
+        } else {
+            mCrime = Crime(0, "", Date(), false, "")
+        }
 
-        Log.d(TAG, "count fragment ${activity.supportFragmentManager.fragments.size}");
+        mPhotoFile = CrimeLab.get(activity).getPhotoFile(mCrime)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -107,15 +117,9 @@ class CrimeFragment: Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (mId > 0) {
-            mCrime = CrimeLab.get(activity).getCrime(mId)!!
-        } else {
-            mCrime = Crime(0, "", Date(), false, "")
-        }
-
         crime_title.setText(mCrime.title)
 
-        crime_title.addTextChangedListener(object: TextWatcher {
+        crime_title.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(c: Editable?) {
 
             }
@@ -164,6 +168,19 @@ class CrimeFragment: Fragment() {
         if (packageManager.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
             crime_suspect.isEnabled = false
         }
+
+        val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager) != null
+        crime_camera.isEnabled = canTakePhoto
+        if (canTakePhoto) {
+            val uri = Uri.fromFile(mPhotoFile)
+            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        }
+
+        crime_camera.setOnClickListener {
+            startActivityForResult(captureImage, REQUEST_PHOTO)
+        }
+        updatePhotoView()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -196,6 +213,10 @@ class CrimeFragment: Fragment() {
                 cursor.close()
             }
         }
+
+        if (requestCode == REQUEST_PHOTO) {
+            updatePhotoView()
+        }
     }
 
     private fun updateDate() {
@@ -226,5 +247,14 @@ class CrimeFragment: Fragment() {
         }
 
         return getString(R.string.crime_report, mCrime.title, dateString, solvedString, suspect)
+    }
+
+    fun updatePhotoView() {
+        if (mPhotoFile == null || !mPhotoFile!!.exists()) {
+            crime_photo.setImageDrawable(null)
+        } else {
+            val bitmap = getScaledBitmap(mPhotoFile!!.path, activity)
+            crime_photo.setImageBitmap(bitmap)
+        }
     }
 }
