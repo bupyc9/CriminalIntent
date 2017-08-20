@@ -29,6 +29,7 @@ class CrimeFragment : Fragment() {
         @JvmStatic private val TAG = CrimeFragment::class.java.simpleName
         @JvmStatic private val ARG_CRIME_ID = "arg_crime"
         @JvmStatic private val DIALOG_DATE = "dialog_date"
+        @JvmStatic private val DIALOG_PHOTO = "dialog_photo"
         @JvmStatic private val REQUEST_DATE = 0
         @JvmStatic private val REQUEST_CONTACT = 1
         @JvmStatic private val REQUEST_PHOTO = 2
@@ -181,6 +182,13 @@ class CrimeFragment : Fragment() {
             startActivityForResult(captureImage, REQUEST_PHOTO)
         }
         updatePhotoView()
+
+        crime_photo.setOnClickListener {
+            if (mPhotoFile!!.exists()) {
+                val dialog = PhotoFragment.newInstance(mPhotoFile!!)
+                dialog.show(fragmentManager, DIALOG_PHOTO)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -249,9 +257,9 @@ class CrimeFragment : Fragment() {
         return getString(R.string.crime_report, mCrime.title, dateString, solvedString, suspect)
     }
 
-    fun updatePhotoView() {
+    private fun updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile!!.exists()) {
-            crime_photo.setImageDrawable(null)
+            crime_photo.setImageResource(android.R.color.darker_gray)
         } else {
             val bitmap = getScaledBitmap(mPhotoFile!!.path, activity)
             crime_photo.setImageBitmap(bitmap)
